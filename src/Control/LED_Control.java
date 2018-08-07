@@ -22,88 +22,54 @@ public abstract class LED_Control {
     private static CommandSenderInterface commandSenderArduino;
     public static boolean arduinoIsConnected;
 
+    public static final boolean enableDebugGUI = true;
+    public static DebugGUI gui;
 
-    static Direction snake1Direction = Direction.UP;
-    static Direction snake2Direction = Direction.DOWN;
     static Board board;
-    static boolean foodAvailable = false;
+
 
     public static void main(String[] args){
         //TODO everything.
         initializeSerialConnections();
         initializeCommandSenders();
-        runSnake();
+
+        SnakeGame.setCommandSender(commandSenderArduino);
+        SnakeGame.runSnake();
     }
 
-    public static void runSnake(){
-        board = new Board();
 
 
-        ArrayList<Pixel> snake1Pixel = new ArrayList<>();
-        snake1Pixel.add(new Pixel(7, 3));
-        snake1Pixel.add(new Pixel(7, 2));
-        snake1Pixel.add(new Pixel(7, 1));
-
-        board.addGameObject(new Snake(snake1Pixel, Color.GREEN, Direction.UP));
-        board.updateBoard();
-
-        DebugGUI gui = new DebugGUI(board);
-        //BoardTransformerWS2812B.printIntArray(BoardTransformerWS2812B.transformToIntArray(board.board));
-        CommandSenderThread commando = new CommandSenderThread(board, commandSenderArduino);
-        Thread thread = new Thread(commando);
-        thread.start();
-
-        while(true){
+    public static void playDeathAnimation(Pixel culprit){
+        board.clearBoard();
+        ExplosionCircle circle = new ExplosionCircle(culprit.color);
+        for(int r = 0; r < 20; r++){
+            for(int phi = 5; phi < 360; phi = phi + 10){
+                Pixel pix = null;
+                double phiRadiant = phi*Math.PI/180;
+                if(r%2==0) {
+                    pix = new Pixel((int) (culprit.column + r * Math.cos(phiRadiant)),
+                            (int) (culprit.row + r * Math.sin(phiRadiant)),
+                            culprit.color);
+                }else{
+                    pix = new Pixel((int) (culprit.column + r * Math.cos(phiRadiant)),
+                            (int) (culprit.row + r * Math.sin(phiRadiant)),
+                            Color.red);
+                }
+                 circle.addPixel(pix);
+            }
+            board.addGameObject(circle);
+            board.updateBoard();
+            updateDebugGUI();
             try {
-                Thread.sleep(260);
+                Thread.sleep(120);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            board.gameObjects.get(0).move(snake1Direction);
-
-            if (board.gameObjects.size() > 1) {
-                board.gameObjects.get(1).move(snake2Direction);
-            }
-
-            spawnFood();
-            board.didSnakeEat();
-            if(board.isGameOver_SNAKE()){
-                System.out.println("GAME OVER");
-            }
-
-            board.updateBoard();
-            gui.getButtonGrid().invalidate();
-            gui.getButtonGrid().repaint();
-
+            board.clearBoard();
+            circle.clear();
         }
     }
 
-    public static void spawnFood(){
-        Random rand = new Random();
-
-        int foodColumn = rand.nextInt(12) + 1;
-        int foodRow = rand.nextInt(12) + 1;
-
-        if (rand.nextInt(100)+1 <= Constants.foodSpawn && !foodAvailable){
-            boolean collidesWithSnake = false;
-
-            for(Pixel pix : board.getSnakePixel()){
-                if(foodColumn == pix.column && foodRow == pix.row){
-                    collidesWithSnake = true;
-                }
-            }
-
-            if(!collidesWithSnake){
-                board.addGameObject(new SnakeFood(new Pixel(foodColumn, foodRow)));
-                foodAvailable = true;
-            }
-        }
-    }
-
-    public static void setFoodEaten(){
-        foodAvailable = false;
-    }
 
     public static void initializeSerialConnections(){
         try {
@@ -140,6 +106,13 @@ public abstract class LED_Control {
             System.out.println("No command sender (front) has been initialized.");
         }
 
+    }
+
+    public static void updateDebugGUI(){
+        if(enableDebugGUI){
+            gui.getButtonGrid().invalidate();
+            gui.getButtonGrid().repaint();
+        }
     }
 
 }

@@ -21,7 +21,7 @@ public class SerialConnectionHandler extends Observable {
             CommPort commPort = portIdentifier.open(this.getClass().getName(), 5000);
 
             this.serialPort = (SerialPort) commPort;
-            serialPort.setSerialPortParams(57600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+            serialPort.setSerialPortParams(115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
             System.out.println("Connection established with port " + comPort + ".");
 

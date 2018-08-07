@@ -28,7 +28,9 @@ public class Board {
         }
         for(GameObject obj : gameObjects){
             for(Pixel pix : obj.pixels){
-                board[pix.column][pix.row] = pix.color;
+                if(pix.row < 14 && pix.row >= 0 && pix.column < 14 && pix.column >= 0) {
+                    board[pix.column][pix.row] = pix.color;
+                }
             }
         }
     }
@@ -56,25 +58,25 @@ public class Board {
         }
     }
 
-    public boolean isGameOver_SNAKE(){
-        Color culprit = Color.WHITE;
+    public Pixel isGameOver_SNAKE(){
+        Pixel culprit = null;
 
         for (GameObject i : gameObjects){
             if(i instanceof Snake) {
-                if (i.getFirstPixel().column <= 0 || i.getFirstPixel().column >= 14 ||
-                        i.getFirstPixel().row <= 0 || i.getFirstPixel().row >= 14) {
-                    culprit = i.getColor();
+                if (i.getFirstPixel().column < 0 || i.getFirstPixel().column >= 14 ||
+                        i.getFirstPixel().row < 0 || i.getFirstPixel().row >= 14) {
+                    culprit = i.getFirstPixel();
                     // TODO runDeathAnimation(Color culprit)
-                    return true;
+                    return culprit;
                 }
 
                 for (GameObject k : gameObjects) {
                     for (Pixel pix : k.pixels) {
                         if (!(i.getFirstPixel().equals(pix)) && (k instanceof Snake)) {
                             if (i.getFirstPixel().column == pix.column && i.getFirstPixel().row == pix.row) {
-                                culprit = i.getColor();
+                                culprit = i.getFirstPixel();
                                 // TODO runDeathAnimation(Color culprit)
-                                return true;
+                                return culprit;
                             }
                         }
                     }
@@ -82,7 +84,7 @@ public class Board {
             }
         }
 
-        return false;
+        return culprit;
     }
 
     public void paintColorMap(){
@@ -113,6 +115,10 @@ public class Board {
         }
 
         return snakePixels;
+    }
+
+    public void clearBoard(){
+        this.gameObjects.clear();
     }
 
 }

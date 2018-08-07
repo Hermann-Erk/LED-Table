@@ -16,6 +16,6 @@ public class ChangeDirectionAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent event){
-        LED_Control.snake1Direction = dir;
+        SnakeGame.snake1Direction = dir;
     }
 }

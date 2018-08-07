@@ -1,6 +1,7 @@
 package model;
 
 import Control.LED_Control;
+import Control.SnakeGame;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class Snake extends GameObject {
             if(this.hasEaten){
                 this.pixels.add(new Pixel(-1,-1, this.color));
                 this.hasEaten=false;
-                LED_Control.setFoodEaten();
+                SnakeGame.setFoodEaten();
             }
 
             for(int i = this.pixels.size() - 1; i > 0; i--){

@@ -15,6 +15,10 @@ public abstract class GameObject {
         this.pixels.add(new Pixel(column, row, color));
     }
 
+    public void addPixel(Pixel pix){
+        this.pixels.add(pix);
+    }
+
     public void addPixel(int column, int row){
         this.pixels.add(new Pixel(column, row));
     }
