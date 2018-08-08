@@ -8,4 +8,8 @@ public class Constants {
     public static int[] header = { 0xDE, 0xAD, 0xBE, 0xEF };
 
     public static int foodSpawn = 10; //chance in %
+    public static float pongDT = 200f;
+    public static float pongPlayerVelocity = 0.0006f;
+
+    public static float PONG_BALL_VELOCITY_INCREMENT = 0.00005f;
 }

@@ -8,8 +8,6 @@ import view.DebugGUI;
 import java.awt.*;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Hermann on 02.08.2018.
@@ -27,14 +25,17 @@ public abstract class LED_Control {
 
     static Board board;
 
+    public static Game currentGame = null;
+
 
     public static void main(String[] args){
-        //TODO everything.
         initializeSerialConnections();
         initializeCommandSenders();
 
         SnakeGame.setCommandSender(commandSenderArduino);
-        SnakeGame.runSnake();
+        PongGame.setCommandSender(commandSenderArduino);
+        //SnakeGame.runSnake();
+        PongGame.runPong();
     }
 
 

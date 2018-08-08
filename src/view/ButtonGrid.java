@@ -1,5 +1,7 @@
 package view;
 
+import Control.Game;
+import Control.LED_Control;
 import model.Board;
 import model.Direction;
 import Control.ChangeDirectionAction;
@@ -19,7 +21,15 @@ public class ButtonGrid extends JPanel {
         this.board = board;
         boardHeight = SCREEN_SIZE.height - CONTROL_PANEL_HEIGHT - 80;
         this.initializeWindow(CONTROL_PANEL_HEIGHT);
-        this.setKeyBindings();
+
+        if(LED_Control.currentGame.equals(Game.SNAKE)) {
+            this.setKeyBindings_SNAKE();
+        }
+
+        if(LED_Control.currentGame.equals(Game.PONG)) {
+            this.setKeyBindings_PONG();
+        }
+
         this.initializeContent();
     }
 
@@ -55,7 +65,7 @@ public class ButtonGrid extends JPanel {
 
     }
 
-    private void setKeyBindings(){
+    private void setKeyBindings_SNAKE(){
         this.getInputMap().put(KeyStroke.getKeyStroke("UP"), "goUp");
         this.getInputMap().put(KeyStroke.getKeyStroke("DOWN"), "goDown");
         this.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"), "goRight");
@@ -64,6 +74,17 @@ public class ButtonGrid extends JPanel {
         this.getActionMap().put("goDown", new ChangeDirectionAction(Direction.DOWN));
         this.getActionMap().put("goRight", new ChangeDirectionAction(Direction.RIGHT));
         this.getActionMap().put("goLeft", new ChangeDirectionAction(Direction.LEFT));
+    }
+
+    private void setKeyBindings_PONG(){
+        this.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "pressedLeft");
+        this.getInputMap().put(KeyStroke.getKeyStroke("released LEFT"), "releasedLeft");
+        this.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"), "pressedRight");
+        this.getInputMap().put(KeyStroke.getKeyStroke("released RIGHT"), "releasedRight");
+        this.getActionMap().put("pressedLeft", new ChangeDirectionAction(Direction.LEFT));
+        this.getActionMap().put("releasedLeft", new ChangeDirectionAction(null));
+        this.getActionMap().put("pressedRight", new ChangeDirectionAction(Direction.RIGHT));
+        this.getActionMap().put("releasedRight", new ChangeDirectionAction(null));
     }
 
 

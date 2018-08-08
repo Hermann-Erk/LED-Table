@@ -11,7 +11,7 @@ public class CommandSenderDummy implements CommandSenderInterface{
     }
 
     public void sendBoardArray(int[] boardArray){
-        System.out.println("WARNING: The boardArray has not been sent by the dummy.");
+        //System.out.println("WARNING: The boardArray has not been sent by the dummy.");
     }
 
 }

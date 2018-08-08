@@ -22,6 +22,8 @@ public abstract class SnakeGame {
 
 
     public static void runSnake(){
+        LED_Control.currentGame = Game.SNAKE;
+
         board = new Board();
         //if(enableDebugGUI) {
         LED_Control.gui = new DebugGUI(board);
