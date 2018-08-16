@@ -17,17 +17,16 @@ public abstract class SnakeGame {
     private static CommandSenderInterface commandSenderArduino;
 
     static boolean foodAvailable = false;
-    static Direction snake1Direction = Direction.UP;
-    static Direction snake2Direction = Direction.DOWN;
+    public static Direction snake1Direction = Direction.UP;
+    public static Direction snake2Direction = Direction.DOWN;
+
+    public static Board board = LED_Control.board;
 
 
     public static void runSnake(){
         LED_Control.currentGame = Game.SNAKE;
+        //LED_Control.gui.getButtonGrid().updateKeyBindings();
 
-        board = new Board();
-        //if(enableDebugGUI) {
-        LED_Control.gui = new DebugGUI(board);
-        //}
         //BoardTransformerWS2812B.printIntArray(BoardTransformerWS2812B.transformToIntArray(board.board));
         CommandSenderThread commando = new CommandSenderThread(board, commandSenderArduino);
         Thread thread = new Thread(commando);
@@ -42,6 +41,17 @@ public abstract class SnakeGame {
             board.addGameObject(new Snake(snake1Pixel, Color.GREEN, Direction.UP));
             snake1Direction = Direction.UP;
             foodAvailable = false;
+
+            ArrayList<Pixel> snake2Pixel = new ArrayList<>();
+            snake2Pixel.add(new Pixel(6, 10));
+            snake2Pixel.add(new Pixel(6, 11));
+            snake2Pixel.add(new Pixel(6, 12));
+
+            if(LED_Control.numberOfPlayers == 2) {
+                board.addGameObject(new Snake(snake2Pixel, Color.MAGENTA, Direction.DOWN));
+            }
+
+            snake2Direction = Direction.DOWN;
 
             board.updateBoard();
 
@@ -70,7 +80,11 @@ public abstract class SnakeGame {
                 }
 
                 board.updateBoard();
-                LED_Control.updateDebugGUI();
+
+                if (LED_Control.enableDebugGUI) {
+                    LED_Control.updateDebugGUI();
+                }
+
             }
 
             try {

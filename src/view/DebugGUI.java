@@ -10,13 +10,15 @@ import java.awt.*;
  * Created by Hermann on 02.08.2018.
  */
 public class DebugGUI extends JFrame {
-    private ButtonGrid buttonGrid;
+    private static ButtonGrid buttonGrid;
     // Screen size is in capital letters due to its constant behaviour
     private Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
     private final int CONTROL_PANEL_HEIGHT = 120;
+    private static Board board;
 
-    public DebugGUI(Board board) {
+    public DebugGUI(Board newBoard) {
         super("LED Table: Debug GUI");
+        board = newBoard;
         this.initializeWindow();
         buttonGrid = new ButtonGrid(SCREEN_SIZE,CONTROL_PANEL_HEIGHT,board);
         this.getContentPane().add(buttonGrid);
@@ -37,4 +39,10 @@ public class DebugGUI extends JFrame {
     public ButtonGrid getButtonGrid(){
         return buttonGrid;
     }
+
+    public static void setBoard(Board newBoard){
+        board = newBoard;
+        buttonGrid.setBoard(newBoard);
+    }
+
 }

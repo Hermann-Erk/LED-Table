@@ -16,11 +16,15 @@ public class ChangeDirectionAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent event){
-        if(LED_Control.currentGame.equals(Game.SNAKE)) {
+        if(LED_Control.currentGame.equals(Game.SNAKE) && dir != null) {
             SnakeGame.snake1Direction = dir;
+            SnakeGame.snake2Direction = dir;
         }
         if(LED_Control.currentGame.equals(Game.PONG)){
             PongGame.player1Direction = dir;
+            if(LED_Control.numberOfPlayers == 2){
+                PongGame.player2Direction = dir;
+            }
         }
     }
 }

@@ -1,6 +1,8 @@
 package Control;
 
 import ArduinoInterface.*;
+import ControllerInterface.ControllerInterface;
+import PixelArtAndAnimation.PixelArtIntro;
 import gnu.io.SerialPort;
 import model.*;
 import view.DebugGUI;
@@ -14,16 +16,21 @@ import java.io.OutputStream;
  */
 public abstract class LED_Control {
     private static SerialConnectionHandler connectionHandlerArduino = new SerialConnectionHandler();
+
     private static SerialPort serialPortArduino;
     private static InputStream inputStreamArduino;
     private static OutputStream outputStreamArduino;
+
     private static CommandSenderInterface commandSenderArduino;
     public static boolean arduinoIsConnected;
+    public static boolean controller1IsConnected;
 
     public static final boolean enableDebugGUI = true;
     public static DebugGUI gui;
 
-    static Board board;
+    public static int numberOfPlayers = 1;
+
+    public static Board board = new Board();
 
     public static Game currentGame = null;
 
@@ -34,8 +41,20 @@ public abstract class LED_Control {
 
         SnakeGame.setCommandSender(commandSenderArduino);
         PongGame.setCommandSender(commandSenderArduino);
-        //SnakeGame.runSnake();
-        PongGame.runPong();
+        PixelArtIntro.setCommandSender(commandSenderArduino);
+
+        currentGame = Game.NONE;
+
+        //ControllerInterface.controllerTest();
+        ControllerInterface.connectJoystick();
+
+        if(enableDebugGUI) {
+            gui = new DebugGUI(board);
+        }
+
+        PixelArtIntro.runIntro();
+        SnakeGame.runSnake();
+        //PongGame.runPong();
     }
 
 
@@ -83,7 +102,9 @@ public abstract class LED_Control {
             //e.printStackTrace();
             arduinoIsConnected = false;
         }
+
     };
+
 
     public static void disconnect() {
         try {

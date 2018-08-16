@@ -22,6 +22,10 @@ public class Board {
 
     }
 
+    public void setColorToPixel(int column, int row, Color color){
+        this.board[column][row] = color;
+    }
+
     public void updateBoard(){
         for (int i = 0; i < 14; i++) {
             for (int j = 0; j < 14; j++) {
@@ -46,7 +50,7 @@ public class Board {
                     if(gameObjects.get(i) instanceof SnakeFood){
                         if (snake.getFirstPixel().column == gameObjects.get(i).getFirstPixel().column &&
                                 snake.getFirstPixel().row == gameObjects.get(i).getFirstPixel().row) {
-                            foodIndexToRemove = 1;
+                            foodIndexToRemove = i;
                             ((Snake) snake).hasEaten();
                         }
                     }
@@ -147,6 +151,9 @@ public class Board {
                         if((int) pongBall.getPositionY() == 0){
                             culpritColor = PongGame.playerDOWN.color;
                         }
+                        if((int) pongBall.getPositionY() == 13){
+                            culpritColor = PongGame.playerUP.color;
+                        }
                         return new Pixel((int)pongBall.getPositionX(),(int) pongBall.getPositionY(),
                                 culpritColor);
                     }
@@ -155,7 +162,6 @@ public class Board {
 
                 for(GameObject player : gameObjects){
                     if(player instanceof PongPlayer){
-                        if(player.getFirstPixel().row == 0 && pongBall.getIncrementYPosition() < 1){
                             if(((PongPlayer) player).getBorderXLeft() < pongBall.getIncrementXPosition() &&
                                     ((PongPlayer) player).getBorderXRight() > pongBall.getIncrementXPosition()){
 
@@ -166,11 +172,18 @@ public class Board {
                                         ((PongPlayer) player).getBorderXLeft();
 
                                 float degree = 180*offsetToRight/width;
-                                pongBall.collide(degree, Direction.DOWN);
+                                if(player.getFirstPixel().row == 0 && pongBall.getIncrementYPosition() < 1) {
+                                    pongBall.collide(degree, Direction.DOWN);
+                                }else{
+                                    if (player.getFirstPixel().row == 13 && pongBall.getIncrementYPosition() > 13){
+                                        pongBall.collide(degree, Direction.UP);
+                                    }
+                                }
                             }
                         }
+
                     }
-                }
+
             }
         }
         return null;
@@ -324,6 +337,20 @@ public class Board {
             return num;
         }else{
             return 0;
+        }
+    }
+
+    public void scaleBrightness(Board scalingBoard, float factor){
+        //System.out.println(factor);
+        if(factor >= 0) {
+            for (int i = 0; i < 14; i++) {
+                for (int j = 0; j < 14; j++) {
+                    this.board[i][j] = new Color(
+                            (int) (scalingBoard.board[i][j].getRed() * factor),
+                            (int) (scalingBoard.board[i][j].getGreen() * factor),
+                            (int) (scalingBoard.board[i][j].getBlue() * factor));
+                }
+            }
         }
     }
 

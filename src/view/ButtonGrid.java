@@ -14,13 +14,15 @@ import java.awt.*;
  */
 public class ButtonGrid extends JPanel {
     private JButton squares[][] = new JButton[14][14];
-    private Board board;
+    private static Board board;
     private int boardHeight;
 
     public ButtonGrid(Dimension SCREEN_SIZE, int CONTROL_PANEL_HEIGHT, Board board){
         this.board = board;
         boardHeight = SCREEN_SIZE.height - CONTROL_PANEL_HEIGHT - 80;
         this.initializeWindow(CONTROL_PANEL_HEIGHT);
+
+        this.setKeyBindings();
 
         if(LED_Control.currentGame.equals(Game.SNAKE)) {
             this.setKeyBindings_SNAKE();
@@ -85,7 +87,38 @@ public class ButtonGrid extends JPanel {
         this.getActionMap().put("releasedLeft", new ChangeDirectionAction(null));
         this.getActionMap().put("pressedRight", new ChangeDirectionAction(Direction.RIGHT));
         this.getActionMap().put("releasedRight", new ChangeDirectionAction(null));
+
     }
 
+    private void setKeyBindings(){
+        this.getInputMap().put(KeyStroke.getKeyStroke("UP"), "goUp");
+        this.getInputMap().put(KeyStroke.getKeyStroke("DOWN"), "goDown");
+        this.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "pressedLeft");
+        this.getInputMap().put(KeyStroke.getKeyStroke("released LEFT"), "releasedLeft");
+        this.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"), "pressedRight");
+        this.getInputMap().put(KeyStroke.getKeyStroke("released RIGHT"), "releasedRight");
+        this.getActionMap().put("goUp", new ChangeDirectionAction(Direction.UP));
+        this.getActionMap().put("goDown", new ChangeDirectionAction(Direction.DOWN));
+        this.getActionMap().put("pressedLeft", new ChangeDirectionAction(Direction.LEFT));
+        this.getActionMap().put("releasedLeft", new ChangeDirectionAction(null));
+        this.getActionMap().put("pressedRight", new ChangeDirectionAction(Direction.RIGHT));
+        this.getActionMap().put("releasedRight", new ChangeDirectionAction(null));
+
+    }
+
+    public void setBoard (Board newBoard){
+        board = newBoard;
+    }
+
+    public void updateKeyBindings(){
+        if(LED_Control.currentGame.equals(Game.SNAKE)) {
+            this.setKeyBindings_SNAKE();
+            System.out.println("test1");
+        }
+
+        if(LED_Control.currentGame.equals(Game.PONG)) {
+            this.setKeyBindings_PONG();
+        }
+    }
 
 }

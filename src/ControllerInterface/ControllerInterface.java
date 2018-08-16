@@ -1,0 +1,96 @@
+package ControllerInterface;
+
+import Control.Game;
+import Control.LED_Control;
+import Control.PongGame;
+import Control.SnakeGame;
+import model.Direction;
+import net.java.games.input.Component;
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
+
+import java.awt.event.ActionEvent;
+
+/**
+ * Created by Hermann on 15.08.2018.
+ */
+public class ControllerInterface {
+
+    public static void controllerTest() {
+        Controller[] ca = ControllerEnvironment.getDefaultEnvironment().getControllers();
+
+        for (int i = 0; i < ca.length; i++) {
+            if(ca[i].getType() == Controller.Type.STICK){
+                System.out.println("Joystick found.");
+                ca[i].poll();
+                Component[] components = ca[i].getComponents();
+                StringBuffer buffer = new StringBuffer();
+                for(int j=0;j<components.length;j++) {
+                    if(j>0) {
+                        buffer.append("\n");
+                    }
+                    buffer.append(components[j].getName() + " / " + components[j].getIdentifier());
+                    buffer.append(": ");
+                    if(components[j].isAnalog()) {
+                        buffer.append(components[j].getPollData());
+                    } else {
+                        if(components[j].getPollData()==1.0f) {
+                            buffer.append("On");
+                        } else {
+                            buffer.append("Off");
+                        }
+                    }
+                }
+                System.out.println(buffer.toString());
+            }
+            /* Get the name of the controller */
+            //System.out.println(ca[i].getName() + "  " + ca[i].getType().toString());
+        }
+
+    }
+
+    public static void connectJoystick() {
+        Controller[] ca = ControllerEnvironment.getDefaultEnvironment().getControllers();
+
+        Controller joy1 = null;
+
+        for (int i = 0; i < ca.length; i++) {
+            if(ca[i].getType() == Controller.Type.STICK){
+                joy1 = ca[i];
+                break;
+            }
+            /* Get the name of the controller */
+            //System.out.println(ca[i].getName() + "  " + ca[i].getType().toString());
+        }
+
+        if(joy1 != null){
+            ControllerPollThread controllerPoll = new ControllerPollThread(joy1, 1);
+            Thread thread = new Thread(controllerPoll);
+            thread.start();
+        }
+
+
+    }
+
+    public static void changeDirection(Direction dir, int player){
+        if(LED_Control.currentGame.equals(Game.SNAKE) && dir != null) {
+            if(player == 1) {
+                SnakeGame.snake1Direction = dir;
+            }
+            if(LED_Control.numberOfPlayers == 2 && player == 2) {
+                SnakeGame.snake2Direction = dir;
+            }
+        }
+        if(LED_Control.currentGame.equals(Game.PONG)){
+            if(player == 1){
+                PongGame.player1Direction = dir;
+            }
+
+            if(LED_Control.numberOfPlayers == 2 && player == 2){
+                PongGame.player2Direction = dir;
+            }
+        }
+    }
+
+
+}

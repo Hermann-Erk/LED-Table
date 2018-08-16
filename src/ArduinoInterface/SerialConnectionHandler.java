@@ -3,6 +3,7 @@ package ArduinoInterface;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Enumeration;
 import java.util.Observable;
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
@@ -15,6 +16,7 @@ public class SerialConnectionHandler extends Observable {
     private OutputStream outputStream;
 
     public SerialPort initializeConnection(String comPort) throws Exception{
+
         try {
             CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(comPort);
 

@@ -7,8 +7,6 @@ import view.DebugGUI;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static Control.LED_Control.board;
-
 
 /**
  * Created by Hermann on 07.08.2018.
@@ -16,15 +14,15 @@ import static Control.LED_Control.board;
 public class PongGame {
     private static CommandSenderInterface commandSenderArduino;
     public static Direction player1Direction = null;
+    public static Direction player2Direction = null;
     public static PongPlayer playerDOWN;
+    public static PongPlayer playerUP;
+    public static Board board = LED_Control.board;
 
     public static void runPong() {
         LED_Control.currentGame = Game.PONG;
+        //LED_Control.gui.getButtonGrid().updateKeyBindings();
 
-        board = new Board();
-        if(LED_Control.enableDebugGUI) {
-            LED_Control.gui = new DebugGUI(board);
-        }
         //BoardTransformerWS2812B.printIntArray(BoardTransformerWS2812B.transformToIntArray(board.board));
         CommandSenderThread commando = new CommandSenderThread(board, commandSenderArduino);
         Thread thread = new Thread(commando);
@@ -40,8 +38,20 @@ public class PongGame {
             player1Pixel.add(new Pixel(6, 0));
             player1Pixel.add(new Pixel(7, 0));
 
-            playerDOWN = new PongPlayer(player1Pixel, Color.BLUE);
+            playerDOWN = new PongPlayer(player1Pixel, Color.GREEN);
             board.addGameObject(playerDOWN);
+
+            ArrayList<Pixel> player2Pixel = new ArrayList<>();
+            player2Pixel.add(new Pixel(4, 13));
+            player2Pixel.add(new Pixel(5, 13));
+            player2Pixel.add(new Pixel(6, 13));
+            player2Pixel.add(new Pixel(7, 13));
+
+            playerUP = new PongPlayer(player2Pixel, Color.MAGENTA);
+
+            if(LED_Control.numberOfPlayers == 2){
+                board.addGameObject(playerUP);
+            }
 
             while (true) {
                 try {
@@ -59,10 +69,15 @@ public class PongGame {
                 ;
 
                 board.gameObjects.get(0).move(Direction.UP);
+
                 board.gameObjects.get(1).move(player1Direction);
 
-                //board.updatePongBoard();
-                board.updatePongBoardSmooth();
+                if(LED_Control.numberOfPlayers==2) {
+                    board.gameObjects.get(2).move(player2Direction);
+                }
+
+                board.updatePongBoard();
+                //board.updatePongBoardSmooth();
 
                 if (LED_Control.enableDebugGUI) {
                     LED_Control.updateDebugGUI();

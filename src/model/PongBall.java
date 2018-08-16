@@ -1,6 +1,7 @@
 package model;
 
 import Control.Constants;
+import Control.LED_Control;
 
 import java.awt.*;
 
@@ -47,6 +48,9 @@ public class PongBall extends GameObject {
     public int collideWithWall(Direction dir){
         switch (dir){
             case UP:
+                if (LED_Control.numberOfPlayers == 2){
+                    return -1;
+                }
                 velocityY = -velocityY;
                 return 0;
             case DOWN:
