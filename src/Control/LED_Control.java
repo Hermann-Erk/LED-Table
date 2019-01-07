@@ -28,7 +28,8 @@ public abstract class LED_Control {
     public static final boolean enableDebugGUI = true;
     public static DebugGUI gui;
 
-    public static int numberOfPlayers = 1;
+    public static int numberOfPlayers = 2;
+    public static boolean reversePlayer2Controls = true;
 
     public static Board board = new Board();
 
@@ -52,7 +53,9 @@ public abstract class LED_Control {
             gui = new DebugGUI(board);
         }
 
-        PixelArtIntro.runIntro();
+
+
+        //PixelArtIntro.runIntro();
         SnakeGame.runSnake();
         //PongGame.runPong();
     }

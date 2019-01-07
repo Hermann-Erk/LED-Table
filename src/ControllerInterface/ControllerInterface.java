@@ -44,7 +44,7 @@ public class ControllerInterface {
                 System.out.println(buffer.toString());
             }
             /* Get the name of the controller */
-            //System.out.println(ca[i].getName() + "  " + ca[i].getType().toString());
+            System.out.println(ca[i].getName() + "  " + ca[i].getType().toString());
         }
 
     }
@@ -53,10 +53,13 @@ public class ControllerInterface {
         Controller[] ca = ControllerEnvironment.getDefaultEnvironment().getControllers();
 
         Controller joy1 = null;
+        Controller joy2 = null;
 
+        int controllerCount = 0;
         for (int i = 0; i < ca.length; i++) {
             if(ca[i].getType() == Controller.Type.STICK){
                 joy1 = ca[i];
+                controllerCount = i;
                 break;
             }
             /* Get the name of the controller */
@@ -67,6 +70,21 @@ public class ControllerInterface {
             ControllerPollThread controllerPoll = new ControllerPollThread(joy1, 1);
             Thread thread = new Thread(controllerPoll);
             thread.start();
+            System.out.println("Controller for Player 1 connected.");
+
+            for (int k = controllerCount+1; k < ca.length; k++) {
+                if(ca[k].getType() == Controller.Type.STICK){
+                    joy2 = ca[k];
+                    break;
+                }
+            }
+        }
+
+        if(joy2 != null){
+            ControllerPollThread controllerPoll = new ControllerPollThread(joy2, 2);
+            Thread thread = new Thread(controllerPoll);
+            thread.start();
+            System.out.println("Controller for Player 2 connected.");
         }
 
 
@@ -78,7 +96,11 @@ public class ControllerInterface {
                 SnakeGame.snake1Direction = dir;
             }
             if(LED_Control.numberOfPlayers == 2 && player == 2) {
-                SnakeGame.snake2Direction = dir;
+                if(LED_Control.reversePlayer2Controls) {
+                    SnakeGame.snake2Direction = dir.getOpposite();
+                }else{
+                    SnakeGame.snake2Direction = dir;
+                }
             }
         }
         if(LED_Control.currentGame.equals(Game.PONG)){
@@ -87,7 +109,11 @@ public class ControllerInterface {
             }
 
             if(LED_Control.numberOfPlayers == 2 && player == 2){
-                PongGame.player2Direction = dir;
+                if (LED_Control.reversePlayer2Controls){
+                    PongGame.player2Direction = dir.getOpposite();
+                }else{
+                    PongGame.player2Direction = dir;
+                }
             }
         }
     }

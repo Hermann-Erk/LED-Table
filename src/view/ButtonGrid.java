@@ -26,6 +26,7 @@ public class ButtonGrid extends JPanel {
 
         if(LED_Control.currentGame.equals(Game.SNAKE)) {
             this.setKeyBindings_SNAKE();
+            System.out.println("test");
         }
 
         if(LED_Control.currentGame.equals(Game.PONG)) {
@@ -113,7 +114,6 @@ public class ButtonGrid extends JPanel {
     public void updateKeyBindings(){
         if(LED_Control.currentGame.equals(Game.SNAKE)) {
             this.setKeyBindings_SNAKE();
-            System.out.println("test1");
         }
 
         if(LED_Control.currentGame.equals(Game.PONG)) {

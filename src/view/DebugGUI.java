@@ -11,7 +11,6 @@ import java.awt.*;
  */
 public class DebugGUI extends JFrame {
     private static ButtonGrid buttonGrid;
-    // Screen size is in capital letters due to its constant behaviour
     private Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
     private final int CONTROL_PANEL_HEIGHT = 120;
     private static Board board;
